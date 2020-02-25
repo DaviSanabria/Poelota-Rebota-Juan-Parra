@@ -1,0 +1,123 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <title>Pelota que Rebota</title>
+    <style>* { padding: 0; margin: 0; } canvas { background: #000000; display: block; margin: 0 auto; }</style>
+</head>
+<body>
+<p><strong>Instrucciones</strong></p>
+<p>la tecla <em>Espacio</em> detiene la pelota.</p>
+<p>la tecla <em>flecha arriba </em> impulza la pelota hacia arriba.</p>
+<p>la tecla <em>flecha abajo</em> impulza la pelota hacia abajo.</p>
+<p>la tecla <em>flecha derecha</em> impulza la pelota hacia la derecha.</p>
+<p>la tecla <em>flecha izquierda</em> impulza la pelota hacia la izquierda.</p>
+
+<canvas id="myCanvas" width="500" height="500"></canvas>
+
+<script>
+    var canvas = document.getElementById("myCanvas");
+    var ctx = canvas.getContext("2d");
+    var ballRadius = 10;
+    var x = canvas.width/2;
+    var y = canvas.height-300;
+    var dx = 0;
+    var dy = 0;
+    var arriba = false;
+    var abajo = false;
+    var izquierda = false;
+    var derecha = false;
+    var espacio= false;
+    document.addEventListener("keydown", pulsadaHandler, false);
+    
+
+    function pulsadaHandler(e) {
+        if(e.keyCode == 39) {
+            derecha = true;
+        }else if(e.keyCode == 38) {
+            arriba = true;
+        }else if(e.keyCode == 37) {
+            izquierda = true;
+        }else if(e.keyCode == 40) {
+            abajo = true;
+        }else if(e.keyCode == 32) {
+            espacio= true;
+        }
+    }
+
+   
+
+    function pintarBola() {
+        ctx.beginPath();
+        ctx.arc(x, y, ballRadius, 0, Math.PI*2);
+        ctx.fillStyle = "#FF0000";
+        ctx.fill();
+        ctx.closePath();
+    }
+
+function frenar() {
+        if (dx>0){
+         dx=dx-0.03;
+         }else if (dx<0){
+         dx=dx+0.03;
+         }
+         if (dy>0){
+         dy=dy-0.03;
+         }else if (dy<0){
+         dy=dy+0.03;
+         }
+    }
+
+function colision() {
+        if(x + dx > canvas.width-ballRadius || x + dx < ballRadius) {
+            dx = -dx;
+        }
+        if(y + dy > canvas.height-ballRadius || y + dy < ballRadius) {
+            dy = -dy;
+        }
+    }
+
+        
+	function mover() {
+        if(arriba) {            
+	  dy=-10;
+	arriba=false;	
+         }
+         if(abajo) {
+            dy=10;
+            abajo=false;
+         }
+         if(derecha) {
+            dx=10;
+           derecha=false;
+         }
+         if(izquierda) {
+            dx=-10;
+	   izquierda=false;
+           
+         }
+         if(espacio) {
+            dx=0;
+	    dy=0;
+	   espacio=false;
+           
+         }
+        }
+
+    function draw() {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        pintarBola();
+        mover();
+        colision();
+        frenar();
+        y += dy;
+	x += dx;
+        
+        
+    }
+
+    setInterval(draw, 5);
+</script>
+
+</body>
+</html>
